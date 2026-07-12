@@ -1,4 +1,4 @@
-import {AnyFunction, global} from "voxmate/voxmate";
+import {AnyFunction, global} from "../voxmate";
 
 
 export interface Zones<TContext> {

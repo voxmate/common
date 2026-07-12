@@ -1,4 +1,4 @@
-import {IGeoLocation} from "voxmate/voxmate";
+import {IGeoLocation} from "../voxmate";
 import {getDomainDescriptorFromUrl} from "./patterns";
 
 const secondsFactor = 1000;

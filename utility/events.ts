@@ -1,4 +1,4 @@
-import {DeregisterFunction} from "voxmate/voxmate";
+import {DeregisterFunction} from "../voxmate";
 import {removeArrayElement} from "./array";
 
 export type EventHandler = (...params: any[]) => void;

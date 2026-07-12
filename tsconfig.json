@@ -6,11 +6,6 @@
 		"moduleResolution": "node",
 		"ignoreDeprecations": "6.0",
 		"noEmit": true,
-		"paths": {
-			"voxmate/voxmate": ["./voxmate"],
-			"voxmate/types": ["./types"],
-			"voxmate/utility/*": ["./utility/*"]
-		},
 		"lib": [
 			"es2017"
 		]
