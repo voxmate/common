@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"experimentalDecorators": true,
+		"module": "esnext",
+		"target": "es2015",
+		"moduleResolution": "node",
+		"ignoreDeprecations": "6.0",
+		"noEmit": true,
+		"paths": {
+			"voxmate/voxmate": ["./voxmate"],
+			"voxmate/types": ["./types"],
+			"voxmate/utility/*": ["./utility/*"]
+		},
+		"lib": [
+			"es2017"
+		]
+	},
+	"include": [
+		"voxmate.ts",
+		"types.d.ts",
+		"utility/**/*.ts"
+	]
+}
