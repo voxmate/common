@@ -598,6 +598,37 @@ export interface IAgentBuildResult {
     error?: string;
 }
 
+// Drivers: user-supplied background voxlets providing a service-kind the engine routes to.
+// A driver declares its kind + config schema statically in voxlet.json (`driver` block) and
+// binds handlers at runtime with drivers.register; the handlers stream via async-generators.
+// The foreground facade in v1 is voxmate.agent.chat() — an async-iterable of string deltas.
+
+export type DriverChatRole = "system" | "user" | "assistant";
+
+export interface IDriverChatMessage {
+    role: DriverChatRole;
+    content: string;
+}
+
+// Errors thrown from a driver stream carry a feature-detectable `code`:
+// "no_provider" — no enabled driver for the service-kind (catch and fall back);
+// "driver_failed" — the driver crashed or errored mid-call (the registry disables it);
+// "cancelled" — the call was cancelled.
+export type DriverErrorCode = "no_provider" | "driver_failed" | "cancelled";
+
+export interface IDriverError extends Error {
+    code: DriverErrorCode;
+}
+
+// An async-iterable over one driver call. Lazy: the call dispatches on the first pull, so an
+// unconsumed stream never reaches the driver. cancel() (or iterator return, e.g. breaking a
+// for-await, or a barge-in unwinding a streaming say) aborts the call cross-VM.
+export interface IDriverStream<T> extends AsyncIterableIterator<T> {
+    cancel(): void;
+}
+
+export type DriverMethod = (...params: any[]) => AsyncIterable<any> | Promise<any>;
+
 export interface IVoxmateStatic {
 
     notifications: {
@@ -875,6 +906,13 @@ export interface IVoxmateStatic {
 
     agent: {
         buildVoxlet(spec: string): IVoxmatePromise<IAgentBuildResult>;
+        chat(messages: IDriverChatMessage[], opts?: Record<string, unknown>): IDriverStream<string>;
+    };
+
+    drivers: {
+        // Driver-side (background driver voxlets only).
+        config(): IVoxmatePromise<any>;
+        register(kind: string, methods: Record<string, DriverMethod>): void;
     };
 }
 
