@@ -885,8 +885,13 @@ export interface IVoxmateStatic {
     settings: {
         getVoxletSettings(): IVoxmatePromise<any>;
         setVoxletSettings(settings: any): IVoxmatePromise<void>;
+        // Writes only the keys the partial names, shallow-merged host-side under the store's
+        // lock. Prefer this over setVoxletSettings for anything that changes one field: a
+        // whole-blob write reverts every key that changed since the writer read it.
+        patchVoxletSettings(partial: any): IVoxmatePromise<void>;
         getVoxmateSettings(): IVoxmatePromise<IVoxmateSettings>;
         setVoxmateSettings(settings: IVoxmateSettings): IVoxmatePromise<unknown>;
+        patchVoxmateSettings(partial: Partial<IVoxmateSettings>): IVoxmatePromise<unknown>;
     };
 
     utility: {
