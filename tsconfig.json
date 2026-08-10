@@ -14,5 +14,10 @@
 		"voxmate.ts",
 		"types.d.ts",
 		"utility/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"utility/*.test.ts",
+		"vitest.config.ts"
 	]
 }

@@ -27,6 +27,11 @@ export function toArray<T>(item: T | T[] | undefined | null): T[] {
 }
 
 
+type Settlement<T> =
+    { status: "resolved", value: T | undefined } |
+    { status: "rejected", reason: any };
+
+
 export class ControllablePromise<T = any> implements Promise<T> {
 
     readonly resolve: (value?: T) => void;
@@ -34,11 +39,7 @@ export class ControllablePromise<T = any> implements Promise<T> {
 
     private readonly promise: Promise<T>;
 
-    private _resolved = false;
-    private _rejected = false;
-
-    private _resolvedValue: T | undefined = undefined;
-    private _rejectValue: any | undefined = undefined;
+    private _settlement: Settlement<T> | null = null;
 
 
     constructor() {
@@ -52,16 +53,20 @@ export class ControllablePromise<T = any> implements Promise<T> {
         });
 
         this.resolve = (value?: T) => {
-            this._resolved = true;
-            this._resolvedValue = value;
+            if (this._settlement)
+                return;
+
+            this._settlement = {status: "resolved", value};
 
             if (resolveFunction)
                 resolveFunction(value);
         };
 
         this.reject = (reason?: any) => {
-            this._rejected = true;
-            this._rejectValue = reason;
+            if (this._settlement)
+                return;
+
+            this._settlement = {status: "rejected", reason};
 
             if (rejectFunction)
                 rejectFunction(reason);
@@ -85,20 +90,22 @@ export class ControllablePromise<T = any> implements Promise<T> {
         return undefined;
     }
 
-    get resolved(): boolean {
-        return this._resolved;
+    get settled(): boolean {
+        return this._settlement !== null;
     }
 
-    get resolvedValue(): T | undefined {
-        return this._resolvedValue;
+    get resolved(): boolean {
+        return this._settlement !== null && this._settlement.status === "resolved";
     }
 
     get rejected(): boolean {
-        return this._rejected;
+        return this._settlement !== null && this._settlement.status === "rejected";
     }
 
-    get completed() {
-        return this.resolved || this.rejected;
+    get resolvedValue(): T | undefined {
+        return this._settlement !== null && this._settlement.status === "resolved"
+            ? this._settlement.value
+            : undefined;
     }
 }
 

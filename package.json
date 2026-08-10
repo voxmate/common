@@ -8,12 +8,19 @@
   "files": [
     "voxmate.ts",
     "types.d.ts",
-    "utility/"
+    "utility/",
+    "!utility/*.test.ts"
   ],
   "exports": {
     ".": "./voxmate.ts",
     "./voxmate": "./voxmate.ts",
     "./types": "./types.d.ts",
     "./utility/*": "./utility/*.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
   }
 }
