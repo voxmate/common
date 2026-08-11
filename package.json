@@ -1,6 +1,6 @@
 {
   "name": "@voxmate/voxmate",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Voxmate base SDK — engine API typings, intrinsic wrappers, and core utilities for voxlet authoring",
   "type": "module",
   "license": "MIT",
